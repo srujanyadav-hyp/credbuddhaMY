@@ -1,6 +1,4 @@
-import 'package:credbuddha/features/profile/binder/profile_binder.dart';
 import 'package:credbuddha/features/profile/screen/profile_screen.dart';
-import 'package:credbuddha/features/startup/bindings/onboarding_binder.dart';
 import 'package:get/get.dart';
 
 // Import Screens
@@ -12,6 +10,8 @@ import '../../features/auth/screens/otp_screen.dart';
 // Import Bindings
 import '../../features/startup/bindings/splash_binder.dart';
 import '../../features/auth/bindings/login_binder.dart';
+import 'package:credbuddha/features/startup/bindings/onboarding_binder.dart';
+import '../../features/profile/bindings/profile_binder.dart';
 
 // Import Route Names
 import 'app_routes.dart';

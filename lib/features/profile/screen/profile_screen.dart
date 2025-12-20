@@ -7,8 +7,8 @@ import '../../../core/theme/app_dimensions.dart';
 // import '../../../core/theme/app_typography.dart'; // Accessed via Theme.of(context)
 
 // Improt your custom Widgets
-import "../../../shared/widgets/custom_text_fields.dart";
-import '../../../shared/widgets/custome_radio_tile.dart';
+import "../../../shared/widgets/custom_text_field.dart";
+import '../../../shared/widgets/custom_radio_tile.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
