@@ -39,6 +39,13 @@ class OtpController extends GetxController {
       await _storage.write('user_token', token);
       await _storage.write('user_data', data['user']);
 
+      bool isProfileComplete = data['user']['profile_complete'] ?? false;
+
+      if (isProfileComplete) {
+        Get.offAllNamed(Routes.HOME);
+      } else {
+        Get.offAllNamed('/profile-create'); // Send to our new screen
+      }
       // 3. Navigate to Dashboard (Remove all previous screens)
       Get.offAllNamed(Routes.HOME); // You need to define this route later
     } catch (e) {

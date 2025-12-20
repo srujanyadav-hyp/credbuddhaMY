@@ -1,4 +1,5 @@
-import 'package:credbuddha/features/home/home_screen.dart';
+import 'package:credbuddha/features/profile/binder/profile_binder.dart';
+import 'package:credbuddha/features/profile/screen/profile_screen.dart';
 import 'package:credbuddha/features/startup/bindings/onboarding_binder.dart';
 import 'package:get/get.dart';
 
@@ -54,9 +55,9 @@ class AppPages {
     ),
 
     GetPage(
-      name: Routes.HOME,
-      page: () => const HomeScreen(),
-      // binding: AuthBinding(), // Reuses logic from Login
+      name: Routes.PROFILE,
+      page: () => const ProfileScreen(),
+      binding: ProfileBinder(), // Reuses logic from Login
       transition: Transition.cupertino, // Smooth iOS style slide
     ),
   ];
