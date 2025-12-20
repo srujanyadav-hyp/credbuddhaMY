@@ -53,4 +53,26 @@ class AuthRepository {
       }
     }
   }
+
+  // ... inside AuthRepository class ...
+
+  Future<Map<String, dynamic>> verifyOtp(String phone, String otp) async {
+    try {
+      final response = await _dio.post(
+        '/verify-otp',
+        data: {'phone': phone, 'otp': otp},
+      );
+
+      // Success! Return the data (Token + User Info)
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        String errorMessage =
+            e.response?.data['error'] ?? "Verification Failed";
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Connection failed. Check your internet.");
+      }
+    }
+  }
 }

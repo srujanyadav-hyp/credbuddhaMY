@@ -1,3 +1,4 @@
+import 'package:credbuddha/features/home/home_screen.dart';
 import 'package:credbuddha/features/startup/bindings/onboarding_binder.dart';
 import 'package:get/get.dart';
 
@@ -5,7 +6,7 @@ import 'package:get/get.dart';
 import '../../features/startup/screens/splash_screen.dart';
 import '../../features/startup/screens/onboarding_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
-// import '../../features/auth/screens/otp_screen.dart';
+import '../../features/auth/screens/otp_screen.dart';
 
 // Import Bindings
 import '../../features/startup/bindings/splash_binder.dart';
@@ -44,12 +45,19 @@ class AppPages {
       transition: Transition.rightToLeft,
     ),
 
-    // // 4. OTP Screen
-    // GetPage(
-    //   name: Routes.OTP,
-    //   page: () => const OtpScreen(),
-    //   binding: AuthBinding(), // Reuses logic from Login
-    //   transition: Transition.cupertino, // Smooth iOS style slide
-    // ),
+    // 4. OTP Screen
+    GetPage(
+      name: Routes.OTP,
+      page: () => const OtpScreen(),
+      binding: AuthBinding(), // Reuses logic from Login
+      transition: Transition.cupertino, // Smooth iOS style slide
+    ),
+
+    GetPage(
+      name: Routes.HOME,
+      page: () => const HomeScreen(),
+      // binding: AuthBinding(), // Reuses logic from Login
+      transition: Transition.cupertino, // Smooth iOS style slide
+    ),
   ];
 }

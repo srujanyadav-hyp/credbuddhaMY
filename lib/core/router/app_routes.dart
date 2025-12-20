@@ -8,6 +8,6 @@ abstract class Routes {
   static const OTP = '/otp';
 
   // Core App (Future)
-  static const DASHBOARD = '/dashboard';
+  static const HOME = '/dashboard';
   static const PROFILE = '/profile';
 }
