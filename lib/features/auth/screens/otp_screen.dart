@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart'; // The magic package
-import '../controllers/otp_contorller.dart';
+import '../controllers/otp_controller.dart';
 import '../../../core/theme/app_colors.dart'; // Assuming you have this
 
 class OtpScreen extends StatelessWidget {

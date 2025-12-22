@@ -55,7 +55,7 @@ class AppPages {
     ),
 
     GetPage(
-      name: Routes.PROFILE,
+      name: Routes.PROFILE_CREATE,
       page: () => const ProfileScreen(),
       binding: ProfileBinder(), // Reuses logic from Login
       transition: Transition.cupertino, // Smooth iOS style slide

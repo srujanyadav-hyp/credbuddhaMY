@@ -1,4 +1,4 @@
-import 'package:credbuddha/features/auth/controllers/otp_contorller.dart';
+import 'package:credbuddha/features/auth/controllers/otp_controller.dart';
 import 'package:get/get.dart';
 import '../controllers/login_controller.dart';
 import '../data/auth_repository.dart';

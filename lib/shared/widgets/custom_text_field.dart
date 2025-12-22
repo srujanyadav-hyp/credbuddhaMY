@@ -8,7 +8,8 @@ class CustomTextField extends StatelessWidget {
   final IconData icon;
   final TextInputType? keyboardType;
   final TextCapitalization textCapitalization;
-  final String? Function(String?)? validator; // Add validator for forms!
+  final String? Function(String?)? validator;
+  final int? maxLength;
 
   const CustomTextField({
     super.key,
@@ -18,6 +19,7 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.textCapitalization = TextCapitalization.none,
     this.validator,
+    this.maxLength,
   });
 
   @override
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       textCapitalization: textCapitalization,
       validator: validator,
+      maxLength: maxLength,
       style: Theme.of(context).textTheme.bodyLarge,
       decoration: InputDecoration(
         labelText: label,

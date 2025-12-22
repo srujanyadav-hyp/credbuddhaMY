@@ -44,7 +44,7 @@ class OtpController extends GetxController {
       if (isProfileComplete) {
         Get.offAllNamed(Routes.HOME);
       } else {
-        Get.offAllNamed('/profile'); // Send to our new screen
+        Get.offAllNamed(Routes.PROFILE_CREATE); // Send to our new screen
       }
       // 3. Navigate to Dashboard (Remove all previous screens)
       Get.offAllNamed(Routes.HOME); // You need to define this route later

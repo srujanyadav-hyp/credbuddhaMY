@@ -223,6 +223,7 @@ class ProfileScreen extends StatelessWidget {
                       controller: controller.panController,
                       icon: Icons.badge,
                       textCapitalization: TextCapitalization.characters,
+                      maxLength: 10,
                     ),
                     const SizedBox(height: AppDimens.p12),
                     Row(
