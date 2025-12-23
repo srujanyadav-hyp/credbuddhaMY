@@ -72,6 +72,7 @@ class AppPages {
     GetPage(
       name: Routes.PROFILE_VIEW,
       page: () => const ProfileViewScreen(),
+      binding: ProfileBinder(),
       transition: Transition.rightToLeft, // Optional animation
     ),
   ];

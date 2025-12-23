@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart'; // To save the token
 import '../data/auth_repository.dart';
@@ -37,7 +39,7 @@ class OtpController extends GetxController {
       // This keeps the user logged in even if they close the app.
       String token = data['token'];
       await _storage.write('user_token', token);
-      await _storage.write('user_data', data['user']);
+      await _storage.write('user_data', jsonEncode(data['user']));
 
       bool isProfileComplete = data['user']['profile_complete'] ?? false;
 

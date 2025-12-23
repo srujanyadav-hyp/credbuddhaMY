@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert'; // 1. Crucial Import for jsonDecode
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -7,6 +8,7 @@ class ProfileRepository {
   final GetStorage _storage = GetStorage();
 
   ProfileRepository() {
+    // 10.0.2.2 for Android Emulator, 127.0.0.1 for others
     _dio.options.baseUrl = Platform.isAndroid
         ? 'http://10.0.2.2:5000/api/profile'
         : 'http://127.0.0.1:5000/api/profile';
@@ -14,32 +16,45 @@ class ProfileRepository {
     _dio.options.headers = {'Content-Type': 'application/json'};
   }
 
+  // --- 1. UPDATE PROFILE (Form Submission) ---
   Future<bool> updateProfile(Map<String, dynamic> data) async {
     try {
-      // 1. Get the User ID from local storage (Saved during Login)
-      final userData = _storage.read('user_data');
+      // Read data from storage
+      var userData = _storage.read('user_data');
+
+      // 2. SAFETY FIX: Decode if it's a String
+      if (userData is String) {
+        userData = jsonDecode(userData);
+      }
+
       if (userData == null) throw Exception("User not logged in");
 
-      // 2. Add User ID to the data payload
+      // 3. Add User ID (Now safe to access ['id'])
       data['user_id'] = userData['id'];
 
-      // 3. Send Request
+      // Send Post Request
       final response = await _dio.post('/update', data: data);
-
       return response.statusCode == 200;
     } on DioException catch (e) {
       throw Exception(e.response?.data['error'] ?? "Failed to update profile");
     }
   }
 
+  // --- 2. GET PROFILE (View Screen) ---
   Future<Map<String, dynamic>> getProfile() async {
     try {
-      final userData = _storage.read('user_data');
+      var userData = _storage.read('user_data');
+
+      // 2. SAFETY FIX: Decode here too!
+      if (userData is String) {
+        userData = jsonDecode(userData);
+      }
+
       if (userData == null) throw Exception("User not logged in");
 
       int userId = userData['id'];
 
-      // Call the new API: /api/profile/get?user_id=1
+      // Call API: /get?user_id=1
       final response = await _dio.get(
         '/get',
         queryParameters: {'user_id': userId},
