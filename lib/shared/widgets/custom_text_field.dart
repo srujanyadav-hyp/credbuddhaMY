@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_dimensions.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
@@ -10,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final String? Function(String?)? validator;
   final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     super.key,
@@ -20,6 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.validator,
     this.maxLength,
+    this.inputFormatters,
   });
 
   @override
@@ -31,6 +34,7 @@ class CustomTextField extends StatelessWidget {
       textCapitalization: textCapitalization,
       validator: validator,
       maxLength: maxLength,
+      inputFormatters: inputFormatters,
       style: Theme.of(context).textTheme.bodyLarge,
       decoration: InputDecoration(
         labelText: label,

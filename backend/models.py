@@ -51,6 +51,7 @@ class UserProfile(db.Model):
         return {
             "full_name": self.full_name,
             "email": self.email,
+            "gender": self.gender,
             "employment_type": self.employment_type,
             "monthly_income": self.monthly_income,
             "pan_number": self.pan_number,

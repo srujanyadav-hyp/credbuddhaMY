@@ -32,10 +32,30 @@ def update_profile():
     # 3. Update Fields (Only update what is sent)
     if 'full_name' in data: profile.full_name = data['full_name']
     if 'email' in data: profile.email = data['email']
+    if 'gender' in data: profile.gender = data['gender']
     if 'employment_type' in data: profile.employment_type = data['employment_type']
     if 'monthly_income' in data: profile.monthly_income = data['monthly_income']
     if 'pan_number' in data: profile.pan_number = data['pan_number']
     if 'dob' in data: profile.dob = data['dob'] # You might need to parse Date string here
+
+# ... existing imports and update_profile code ...
+
+@profile_bp.route('/get', methods=['GET'])
+def get_profile():
+    # 1. Get User ID from Query Params (?user_id=1)
+    user_id = request.args.get('user_id')
+    
+    if not user_id:
+        return jsonify({'error': "User ID is required"}), 400
+        
+    # 2. Find the Profile
+    profile = UserProfile.query.filter_by(user_id=user_id).first()
+    
+    if not profile:
+        return jsonify({'error': "Profile not found"}), 404
+
+    # 3. Return the Data
+    return jsonify(profile.to_dict()), 200
 
     # 4. Save
     try:

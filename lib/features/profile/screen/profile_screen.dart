@@ -1,3 +1,4 @@
+import 'package:credbuddha/core/utils/formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/profile_controller.dart';
@@ -89,11 +90,12 @@ class ProfileScreen extends StatelessWidget {
             },
 
             onStepContinue: () {
-              if (controller.currentStep.value < 2) {
-                controller.currentStep.value++;
-              } else {
-                controller.submitProfile();
-              }
+              // if (controller.currentStep.value < 2) {
+              //   controller.currentStep.value++;
+              // } else {
+              //   controller.submitProfile();
+              // }
+              controller.goNext();
             },
             onStepCancel: () {
               if (controller.currentStep.value > 0) {
@@ -119,6 +121,35 @@ class ProfileScreen extends StatelessWidget {
                       controller: controller.emailController,
                       icon: Icons.email,
                       keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: AppDimens.p16),
+                    Text(
+                      "Gender",
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Obx(
+                      () => Row(
+                        children: [
+                          CustomRadioTile(
+                            title: "Male",
+                            value: "Male",
+                            groupValue: controller.selectedGender.value,
+                            onChanged: (val) =>
+                                controller.selectedGender.value = val!,
+                          ),
+                          const SizedBox(width: 8),
+                          CustomRadioTile(
+                            title: "Female",
+                            value: "Female",
+                            groupValue: controller.selectedGender.value,
+                            onChanged: (val) =>
+                                controller.selectedGender.value = val!,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -224,6 +255,9 @@ class ProfileScreen extends StatelessWidget {
                       icon: Icons.badge,
                       textCapitalization: TextCapitalization.characters,
                       maxLength: 10,
+                      inputFormatters: [
+                        PanCardFormatter(), // Forces the strict rule
+                      ],
                     ),
                     const SizedBox(height: AppDimens.p12),
                     Row(

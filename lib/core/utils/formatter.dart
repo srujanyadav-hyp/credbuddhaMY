@@ -6,23 +6,47 @@ class IndianMobileFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // 1. If the user is deleting text, allow it always.
     if (newValue.text.isEmpty) {
       return newValue;
     }
 
-    // 2. If the user is typing the VERY FIRST character...
     if (newValue.text.length == 1) {
-      // ...check if it is 6, 7, 8, or 9.
       if (RegExp(r'^[6-9]$').hasMatch(newValue.text)) {
         return newValue; // Allow it
       } else {
-        // REJECT IT: Return the old value (effectively ignoring the key press)
         return oldValue;
       }
     }
 
     // 3. For 2nd digit onwards, allow any number (handled by keyboard type)
     return newValue;
+  }
+}
+
+// IndianPanCard formater
+
+class PanCardFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String newText = newValue.text.toUpperCase();
+
+    if (newText.length > 10) return oldValue;
+
+    for (int i = 0; i < newText.length; i++) {
+      String char = newText[i];
+
+      if (i < 5) {
+        if (!RegExp(r'[A-Z]').hasMatch(char)) return oldValue;
+      } else if (i >= 5 && i < 9) {
+        if (!RegExp(r'[0-9]').hasMatch(char)) return oldValue;
+      } else if (i == 9) {
+        if (!RegExp(r'[A-Z]').hasMatch(char)) return oldValue;
+      }
+    }
+
+    return newValue.copyWith(text: newText, selection: newValue.selection);
   }
 }

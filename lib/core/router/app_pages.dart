@@ -6,6 +6,8 @@ import '../../features/startup/screens/splash_screen.dart';
 import '../../features/startup/screens/onboarding_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/otp_screen.dart';
+import '../../features/home/screens/home_screen.dart';
+import '../../features/profile/screen/profile_view_screen.dart';
 
 // Import Bindings
 import '../../features/startup/bindings/splash_binder.dart';
@@ -59,6 +61,18 @@ class AppPages {
       page: () => const ProfileScreen(),
       binding: ProfileBinder(), // Reuses logic from Login
       transition: Transition.cupertino, // Smooth iOS style slide
+    ),
+
+    GetPage(
+      name: Routes.HOME,
+      page: () => const HomeScreen(),
+      transition: Transition.fadeIn,
+    ),
+
+    GetPage(
+      name: Routes.PROFILE_VIEW,
+      page: () => const ProfileViewScreen(),
+      transition: Transition.rightToLeft, // Optional animation
     ),
   ];
 }
