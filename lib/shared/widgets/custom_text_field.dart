@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextCapitalization textCapitalization;
   final String? Function(String?)? validator;
+  final bool isNumber;
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
 
@@ -21,6 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.textCapitalization = TextCapitalization.none,
     this.validator,
+    this.isNumber = false,
     this.maxLength,
     this.inputFormatters,
   });
@@ -30,11 +32,13 @@ class CustomTextField extends StatelessWidget {
     // Keeps your UI clean and consistent across the ENTIRE app
     return TextFormField(
       controller: controller,
-      keyboardType: keyboardType,
+      keyboardType: isNumber ? TextInputType.number : keyboardType,
       textCapitalization: textCapitalization,
       validator: validator,
       maxLength: maxLength,
-      inputFormatters: inputFormatters,
+      inputFormatters: isNumber
+          ? [FilteringTextInputFormatter.digitsOnly, ...(inputFormatters ?? [])]
+          : inputFormatters,
       style: Theme.of(context).textTheme.bodyLarge,
       decoration: InputDecoration(
         labelText: label,

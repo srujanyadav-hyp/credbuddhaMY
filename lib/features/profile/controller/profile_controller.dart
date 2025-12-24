@@ -1,57 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart'; // 1. IMPORT THIS
 import '../data/profile_repository.dart';
 import '../../../core/router/app_routes.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ProfileController extends GetxController {
   final ProfileRepository _repo = ProfileRepository();
 
+  @override
+  void onInit() {
+    super.onInit();
+    checkIfEditing();
+  }
+
   // OBSERVABLES (State)
   var isLoading = false.obs;
-  var currentStep = 0.obs; // To control the Stepper (Step 1, Step 2...)
+  var currentStep = 0.obs;
   var selectedGender = "Male".obs;
+
   // TEXT CONTROLLERS
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final panController = TextEditingController();
   final salaryController = TextEditingController();
+
   var userProfile = <String, dynamic>{}.obs;
   var isLoadingProfile = true.obs;
+  final addressController = TextEditingController();
+  final cityController = TextEditingController();
+  final stateController = TextEditingController();
+  final pincodeController = TextEditingController();
+
   // SELECTIONS
-  var selectedEmployment = "Salaried".obs; // Default
+  var selectedEmployment = "Salaried".obs;
+
+  // --- LOGOUT FUNCTION (NEW) ---
+  void logout() {
+    final storage = GetStorage();
+    storage.erase(); // 1. Clear all local data (User, Token, etc.)
+    Get.offAllNamed(Routes.LOGIN); // 2. Navigate to Login (Remove history)
+  }
+  // -----------------------------
+
+  void checkIfEditing() {
+    if (userProfile.isNotEmpty) {
+      nameController.text = userProfile['full_name'] ?? "";
+      emailController.text = userProfile['email'] ?? "";
+      panController.text = userProfile['pan_number'] ?? "";
+
+      if (userProfile['monthly_income'] != null) {
+        salaryController.text = userProfile['monthly_income'].toString();
+      }
+
+      if (userProfile['employment_type'] != null) {
+        selectedEmployment.value = userProfile['employment_type'];
+      }
+
+      if (userProfile['gender'] != null) {
+        selectedGender.value = userProfile['gender'];
+      }
+    }
+  }
+
+  void enableEditMode() {
+    checkIfEditing();
+    Get.toNamed(Routes.PROFILE_CREATE);
+  }
 
   void goNext() {
-    // --- VALIDATION FOR STEP 1 (Basic Details) ---
+    // STEP 1 VALIDATION
     if (currentStep.value == 0) {
       if (nameController.text.isEmpty) {
         Get.snackbar("Required", "Please enter your full name");
         return;
       }
 
-      // Strict Email Validation
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-      if (!emailRegex.hasMatch(emailController.text.trim())) {
-        Get.snackbar(
-          "Invalid Email",
-          "Please enter a valid email (e.g. john@gmail.com)",
-        );
-        return; // STOP HERE! Do not move to Step 2
+      if (!emailRegex.hasMatch(emailController.text.trim()) ||
+          !emailController.text.trim().endsWith("@gmail.com")) {
+        Get.snackbar("Invalid Email", "Please enter a valid email");
+        return;
       }
     }
 
-    // --- VALIDATION FOR STEP 2 (Employment) ---
+    // STEP 2 VALIDATION
     if (currentStep.value == 1) {
       if (salaryController.text.isEmpty) {
         Get.snackbar("Required", "Please enter your income");
-        return; // STOP HERE!
+        return;
       }
     }
 
-    // --- MOVE LOGIC ---
+    // MOVE LOGIC
     if (currentStep.value < 2) {
-      currentStep.value++; // Move to next step
+      currentStep.value++;
     } else {
-      submitProfile(); // Final Step -> Submit
+      submitProfile();
     }
   }
 
@@ -65,17 +111,15 @@ class ProfileController extends GetxController {
       return;
     }
 
-    // 2. EMAIL VALIDATION (Strict)
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(emailController.text.trim())) {
+    if (!emailRegex.hasMatch(emailController.text.trim()) ||
+        !emailController.text.trim().endsWith("@gmail.com")) {
       Get.snackbar("Invalid Email", "Please enter a valid email address");
       return;
     }
 
-    // --- STRICT PAN VALIDATION START ---
-    String pan = panController.text.trim().toUpperCase(); // Force Uppercase
-    isLoading.value = true;
-
+    // PAN Validation
+    String pan = panController.text.trim().toUpperCase();
     final panRegex = RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$');
 
     if (!panRegex.hasMatch(pan)) {
@@ -86,27 +130,31 @@ class ProfileController extends GetxController {
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
       );
-      return; // STOP HERE
+      return;
     }
 
     isLoading.value = true;
 
     try {
-      // 2. Prepare Data
       final data = {
         "full_name": nameController.text,
         "email": emailController.text,
         "gender": selectedGender.value,
-        "pan_number": pan, // PAN is always Uppercase
+        "pan_number": pan,
         "monthly_income": double.tryParse(salaryController.text) ?? 0,
         "employment_type": selectedEmployment.value,
       };
 
-      // 3. Call API
       await _repo.updateProfile(data);
 
-      // 4. Success -> Go to Dashboard
-      Get.snackbar("Success", "Profile Created Successfully!");
+      Get.snackbar(
+        "Success",
+        "Profile Updated Successfully!",
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+
+      // Navigate to Home
       Get.offAllNamed(Routes.HOME);
     } catch (e) {
       Get.snackbar("Error", e.toString().replaceAll("Exception: ", ""));
@@ -121,16 +169,60 @@ class ProfileController extends GetxController {
       final data = await _repo.getProfile();
       userProfile.value = data;
 
-      // OPTIONAL: Pre-fill the form fields in case they want to edit immediately
       nameController.text = data['full_name'] ?? "";
       emailController.text = data['email'] ?? "";
       panController.text = data['pan_number'] ?? "";
       salaryController.text = (data['monthly_income'] ?? 0).toString();
       selectedEmployment.value = data['employment_type'] ?? "Salaried";
+      if (data['gender'] != null) selectedGender.value = data['gender'];
     } catch (e) {
       print("Error loading profile: $e");
     } finally {
       isLoadingProfile.value = false;
+    }
+  }
+
+  // --- NEW: AUTO-FILL ADDRESS FUNCTION ---
+  Future<void> fetchCurrentAddress() async {
+    isLoading.value = true;
+    try {
+      // 1. Check Permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          Get.snackbar("Permission Denied", "Location permission is required.");
+          isLoading.value = false;
+          return;
+        }
+      }
+
+      // 2. Get GPS Position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // 3. Convert GPS -> Address (Reverse Geocoding)
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+
+        // 4. Auto-Fill the Text Fields
+        addressController.text = "${place.street}, ${place.subLocality}";
+        cityController.text = place.locality ?? "";
+        stateController.text = place.administrativeArea ?? "";
+        pincodeController.text = place.postalCode ?? "";
+
+        Get.snackbar("Success", "Address fetched: ${place.locality}");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Could not fetch location: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 }
