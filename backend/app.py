@@ -4,7 +4,7 @@ from routes.auth import auth_bp
 from routes.profile import profile_bp
 from routes.home import home_bp
 def create_app():
-    # 1. Initialize Flask App (Node: const app = express())
+    # 1. Initialize Flask App
     app = Flask(__name__)
 
     # 2. Configuration
@@ -20,8 +20,8 @@ def create_app():
     # 4. Register Routes (Node: app.use('/api/auth', authRoutes))
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(profile_bp, url_prefix='/api/profile')
-    app.register_blueprint(home_bp, url_prefix='/api/home') # <--- 2. REGISTER THIS
-    # 5. Create Tables (Dev Mode Only)
+    app.register_blueprint(home_bp, url_prefix='/api/home') 
+    # 5. Create Tables 
     # This automatically looks at models.py and creates tables if they don't exist.
     with app.app_context():
         db.create_all()

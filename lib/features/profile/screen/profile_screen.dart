@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../../../core/utils/formatter.dart';
 import '../controller/profile_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
-import '../../../core/utils/formatter.dart';
 import "../../../shared/widgets/custom_text_field.dart";
 import '../../../shared/widgets/custom_radio_tile.dart';
 
@@ -34,7 +35,6 @@ class ProfileScreen extends StatelessWidget {
             type: StepperType.vertical,
             currentStep: controller.currentStep.value,
 
-            // Custom Button Builder
             controlsBuilder: (context, details) {
               return Padding(
                 padding: const EdgeInsets.only(top: AppDimens.p20),
@@ -43,7 +43,6 @@ class ProfileScreen extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: details.onStepContinue,
-                        // Update: Check for Step 3 (Identity) for "Submit"
                         child: Text(
                           controller.currentStep.value == 3 ? "Submit" : "Next",
                         ),
@@ -96,13 +95,40 @@ class ProfileScreen extends StatelessWidget {
                       label: "Full Name (As per PAN)",
                       controller: controller.nameController,
                       icon: Icons.person,
+                      textInputAction: TextInputAction.next,
                     ),
-                    const SizedBox(height: AppDimens.p16),
+                    const SizedBox(height: 16),
+
+                    // ✅ NEW: MOBILE NUMBER FIELD
+                    CustomTextField(
+                      label: "Primary Contact Number (For Loan Updates)",
+                      controller: controller.phoneController,
+                      icon: Icons.phone,
+                      isNumber: true,
+                      maxLength: 10,
+                      textInputAction: TextInputAction.next,
+                      inputFormatters: [
+                        // 1. Only allow digits (standard check)
+                        FilteringTextInputFormatter.digitsOnly,
+
+                        // 2. BLOCK 0-5 as the first character (Our custom rule)
+                        IndianMobileFormatter(),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 4, bottom: 16),
+                      child: Text(
+                        "Note: This does not change your Login ID.",
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ),
+
                     CustomTextField(
                       label: "Email Address",
                       controller: controller.emailController,
                       icon: Icons.email,
                       keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.done,
                       onSubmitted: (_) => controller.goNext(),
                     ),
                     const SizedBox(height: AppDimens.p16),
@@ -151,8 +177,6 @@ class ProfileScreen extends StatelessWidget {
                 content: Column(
                   children: [
                     const SizedBox(height: AppDimens.p8),
-
-                    // Location Button
                     Center(
                       child: TextButton.icon(
                         onPressed: () => controller.fetchCurrentAddress(),
@@ -174,15 +198,13 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Fields
                     CustomTextField(
                       label: "Full Address",
                       controller: controller.addressController,
                       icon: Icons.home,
+                      textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 16),
-
                     Row(
                       children: [
                         Expanded(
@@ -190,6 +212,7 @@ class ProfileScreen extends StatelessWidget {
                             label: "City",
                             controller: controller.cityController,
                             icon: Icons.location_city,
+                            textInputAction: TextInputAction.next,
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -199,6 +222,7 @@ class ProfileScreen extends StatelessWidget {
                             controller: controller.pincodeController,
                             icon: Icons.pin_drop,
                             isNumber: true,
+                            textInputAction: TextInputAction.next,
                           ),
                         ),
                       ],
@@ -208,6 +232,7 @@ class ProfileScreen extends StatelessWidget {
                       label: "State",
                       controller: controller.stateController,
                       icon: Icons.map,
+                      textInputAction: TextInputAction.done,
                       onSubmitted: (_) => controller.goNext(),
                     ),
                   ],
@@ -232,7 +257,6 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: AppDimens.p8),
-
                     Obx(
                       () => Column(
                         children: [
@@ -278,9 +302,9 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: AppDimens.p16),
 
+                    // Income Field
                     Obx(
                       () => CustomTextField(
                         label: controller.selectedEmployment.value == "Student"
@@ -289,8 +313,20 @@ class ProfileScreen extends StatelessWidget {
                         controller: controller.salaryController,
                         icon: Icons.currency_rupee,
                         keyboardType: TextInputType.number,
-                        onSubmitted: (_) => controller.goNext(),
+                        textInputAction: TextInputAction.next,
                       ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // ✅ NEW: LOAN AMOUNT FIELD
+                    CustomTextField(
+                      label: "Required Loan Amount",
+                      controller: controller.loanAmountController,
+                      icon: Icons.account_balance_wallet,
+                      isNumber: true,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => controller.goNext(),
                     ),
                   ],
                 ),
@@ -313,6 +349,7 @@ class ProfileScreen extends StatelessWidget {
                       textCapitalization: TextCapitalization.characters,
                       maxLength: 10,
                       inputFormatters: [PanCardFormatter()],
+                      textInputAction: TextInputAction.done,
                       onSubmitted: (_) => controller.submitProfile(),
                     ),
                     const SizedBox(height: AppDimens.p12),

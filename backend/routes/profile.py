@@ -33,9 +33,15 @@ def update_profile():
     # Update Fields (Check individually)
     if 'full_name' in data: profile.full_name = data['full_name']
     if 'email' in data: profile.email = data['email']
+    # ✅ Save Phone
+    if 'phone' in data: profile.phone = data['phone']
     if 'gender' in data: profile.gender = data['gender']
+    
     if 'employment_type' in data: profile.employment_type = data['employment_type']
     if 'monthly_income' in data: profile.monthly_income = data['monthly_income']
+    # ✅ Save Loan Amount
+    if 'loan_amount' in data: profile.loan_amount = data['loan_amount']
+    
     if 'pan_number' in data: profile.pan_number = data['pan_number']
     if 'dob' in data: profile.dob = data['dob']
     if 'address' in data: profile.address = data['address']

@@ -36,11 +36,17 @@ class UserProfile(db.Model):
     email = db.Column(db.String(120), nullable=True)
     gender = db.Column(db.String(10), nullable=True) # "Male", "Female"
     
-    # Employment Details
+   
+    phone = db.Column(db.String(15), nullable=True) 
+
+   
     employment_type = db.Column(db.String(50), nullable=True) # "Salaried", "Self-Employed"
     monthly_income = db.Column(db.Float, nullable=True)
     company_name = db.Column(db.String(100), nullable=True)
     
+    
+    loan_amount = db.Column(db.Float, nullable=True)
+
     # Identity & Location
     pan_number = db.Column(db.String(10), nullable=True)
     dob = db.Column(db.String(20), nullable=True) 
@@ -53,9 +59,11 @@ class UserProfile(db.Model):
         return {
             "full_name": self.full_name,
             "email": self.email,
+            "phone": self.phone, # Return phone
             "gender": self.gender,
             "employment_type": self.employment_type,
             "monthly_income": self.monthly_income,
+            "loan_amount": self.loan_amount, # Return loan amount
             "pan_number": self.pan_number,
             "address": self.address,
             "city": self.city,
