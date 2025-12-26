@@ -38,6 +38,10 @@ def update_profile():
     if 'monthly_income' in data: profile.monthly_income = data['monthly_income']
     if 'pan_number' in data: profile.pan_number = data['pan_number']
     if 'dob' in data: profile.dob = data['dob']
+    if 'address' in data: profile.address = data['address']
+    if 'city' in data: profile.city = data['city']
+    if 'state' in data: profile.state = data['state']
+    if 'pincode' in data: profile.pincode = data['pincode']
 
     # Save to DB
     try:

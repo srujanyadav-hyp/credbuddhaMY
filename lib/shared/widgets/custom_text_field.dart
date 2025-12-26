@@ -13,6 +13,8 @@ class CustomTextField extends StatelessWidget {
   final bool isNumber;
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
+  final TextInputAction? textInputAction;
+  final void Function(String)? onSubmitted;
 
   const CustomTextField({
     super.key,
@@ -25,6 +27,8 @@ class CustomTextField extends StatelessWidget {
     this.isNumber = false,
     this.maxLength,
     this.inputFormatters,
+    this.textInputAction,
+    this.onSubmitted,
   });
 
   @override
@@ -36,6 +40,8 @@ class CustomTextField extends StatelessWidget {
       textCapitalization: textCapitalization,
       validator: validator,
       maxLength: maxLength,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onSubmitted,
       inputFormatters: isNumber
           ? [FilteringTextInputFormatter.digitsOnly, ...(inputFormatters ?? [])]
           : inputFormatters,

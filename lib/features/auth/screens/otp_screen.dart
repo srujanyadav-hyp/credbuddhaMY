@@ -84,24 +84,24 @@ class OtpScreen extends StatelessWidget {
             const Spacer(),
 
             // --- VERIFY BUTTON ---
-            Obx(
-              () => SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: controller.isLoading.value ? null : () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: controller.isLoading.value
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text("Verify", style: TextStyle(fontSize: 16)),
-                ),
-              ),
-            ),
+            // Obx(
+            //   () => SizedBox(
+            //     width: double.infinity,
+            //     height: 50,
+            //     child: ElevatedButton(
+            //       onPressed: controller.isLoading.value ? null : () {},
+            //       style: ElevatedButton.styleFrom(
+            //         backgroundColor: AppColors.primary,
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(12),
+            //         ),
+            //       ),
+            //       child: controller.isLoading.value
+            //           ? const CircularProgressIndicator(color: Colors.white)
+            //           : const Text("Verify", style: TextStyle(fontSize: 16)),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

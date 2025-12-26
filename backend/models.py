@@ -44,6 +44,8 @@ class UserProfile(db.Model):
     # Identity & Location
     pan_number = db.Column(db.String(10), nullable=True)
     dob = db.Column(db.String(20), nullable=True) 
+    address = db.Column(db.String(200), nullable=True)
+    state = db.Column(db.String(50), nullable=True)   
     pincode = db.Column(db.String(6), nullable=True)
     city = db.Column(db.String(50), nullable=True)
 
@@ -55,5 +57,9 @@ class UserProfile(db.Model):
             "employment_type": self.employment_type,
             "monthly_income": self.monthly_income,
             "pan_number": self.pan_number,
+            "address": self.address,
+            "city": self.city,
+            "state": self.state,
+            "pincode": self.pincode,
             "is_complete": bool(self.pan_number and self.monthly_income) 
         }

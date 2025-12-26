@@ -61,6 +61,7 @@ class LoginController extends GetxController {
 
       //  SUCCESS -> Move to OTP Screen
       Get.toNamed(Routes.OTP, arguments: {'phone': cleanPhone});
+      // Get.toNamed(Routes.PROFILE_CREATE);
     } catch (e) {
       // HANDLE ERRORS GRACEFULLY
       errorMessage.value = "Something went wrong. Please try again.";

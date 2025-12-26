@@ -52,8 +52,9 @@ class HomeScreen extends StatelessWidget {
       ),
 
       body: Obx(() {
-        if (controller.isLoading.value)
+        if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
+        }
 
         return RefreshIndicator(
           onRefresh: () async => controller.fetchDashboard(),
@@ -135,9 +136,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
 
-              ...controller.loanOffers
-                  .map((loan) => _buildModernLoanCard(loan))
-                  .toList(),
+              ...controller.loanOffers.map(
+                (loan) => _buildModernLoanCard(loan),
+              ),
             ],
           ),
         );

@@ -103,6 +103,7 @@ class ProfileScreen extends StatelessWidget {
                       controller: controller.emailController,
                       icon: Icons.email,
                       keyboardType: TextInputType.emailAddress,
+                      onSubmitted: (_) => controller.goNext(),
                     ),
                     const SizedBox(height: AppDimens.p16),
                     Align(
@@ -207,6 +208,7 @@ class ProfileScreen extends StatelessWidget {
                       label: "State",
                       controller: controller.stateController,
                       icon: Icons.map,
+                      onSubmitted: (_) => controller.goNext(),
                     ),
                   ],
                 ),
@@ -287,6 +289,7 @@ class ProfileScreen extends StatelessWidget {
                         controller: controller.salaryController,
                         icon: Icons.currency_rupee,
                         keyboardType: TextInputType.number,
+                        onSubmitted: (_) => controller.goNext(),
                       ),
                     ),
                   ],
@@ -310,6 +313,7 @@ class ProfileScreen extends StatelessWidget {
                       textCapitalization: TextCapitalization.characters,
                       maxLength: 10,
                       inputFormatters: [PanCardFormatter()],
+                      onSubmitted: (_) => controller.submitProfile(),
                     ),
                     const SizedBox(height: AppDimens.p12),
                     Row(

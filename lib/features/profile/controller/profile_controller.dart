@@ -50,6 +50,11 @@ class ProfileController extends GetxController {
       emailController.text = userProfile['email'] ?? "";
       panController.text = userProfile['pan_number'] ?? "";
 
+      addressController.text = userProfile['address'] ?? "";
+      cityController.text = userProfile['city'] ?? "";
+      stateController.text = userProfile['state'] ?? "";
+      pincodeController.text = userProfile['pincode'] ?? "";
+
       if (userProfile['monthly_income'] != null) {
         salaryController.text = userProfile['monthly_income'].toString();
       }
@@ -70,34 +75,51 @@ class ProfileController extends GetxController {
   }
 
   void goNext() {
-    // STEP 1 VALIDATION
+    // --- STEP 1: BASIC DETAILS (Index 0) ---
     if (currentStep.value == 0) {
-      if (nameController.text.isEmpty) {
+      if (nameController.text.isEmpty ||
+          nameController.text.trim().length <= 3) {
         Get.snackbar("Required", "Please enter your full name");
         return;
       }
 
+      // Strict Email Validation (Must be valid format AND @gmail.com)
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
       if (!emailRegex.hasMatch(emailController.text.trim()) ||
           !emailController.text.trim().endsWith("@gmail.com")) {
-        Get.snackbar("Invalid Email", "Please enter a valid email");
+        Get.snackbar("Invalid Email", "Please enter a valid Gmail address");
         return;
       }
     }
 
-    // STEP 2 VALIDATION
+    // --- STEP 2: ADDRESS DETAILS (Index 1) ---
+    // ✅ NEW VALIDATION for the Address Step we added
     if (currentStep.value == 1) {
+      if (addressController.text.isEmpty ||
+          cityController.text.isEmpty ||
+          stateController.text.isEmpty ||
+          pincodeController.text.isEmpty) {
+        Get.snackbar("Required", "Please fill all address details");
+        return;
+      }
+    }
+
+    // --- STEP 3: EMPLOYMENT (Index 2) ---
+    // Moved from Index 1 to Index 2
+    if (currentStep.value == 2) {
       if (salaryController.text.isEmpty) {
         Get.snackbar("Required", "Please enter your income");
         return;
       }
     }
 
-    // MOVE LOGIC
-    if (currentStep.value < 2) {
+    // --- MOVE LOGIC ---
+    // We now have 4 steps (0, 1, 2, 3).
+    // If index is less than 3, go to next. If it is 3, Submit.
+    if (currentStep.value < 3) {
       currentStep.value++;
     } else {
-      submitProfile();
+      submitProfile(); // Final Step (Identity) -> Submit
     }
   }
 
@@ -143,6 +165,10 @@ class ProfileController extends GetxController {
         "pan_number": pan,
         "monthly_income": double.tryParse(salaryController.text) ?? 0,
         "employment_type": selectedEmployment.value,
+        "address": addressController.text,
+        "city": cityController.text,
+        "state": stateController.text,
+        "pincode": pincodeController.text,
       };
 
       await _repo.updateProfile(data);
@@ -174,6 +200,10 @@ class ProfileController extends GetxController {
       panController.text = data['pan_number'] ?? "";
       salaryController.text = (data['monthly_income'] ?? 0).toString();
       selectedEmployment.value = data['employment_type'] ?? "Salaried";
+      addressController.text = data['address'] ?? "";
+      cityController.text = data['city'] ?? "";
+      stateController.text = data['state'] ?? "";
+      pincodeController.text = data['pincode'] ?? "";
       if (data['gender'] != null) selectedGender.value = data['gender'];
     } catch (e) {
       print("Error loading profile: $e");

@@ -1,3 +1,4 @@
+import 'package:credbuddha/core/router/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For TextInputFormatter
 import 'package:get/get.dart';
@@ -153,7 +154,7 @@ class LoginScreen extends GetView<LoginController> {
                     onPressed: controller.isButtonEnabled.value
                         ? controller.sendOtp
                         : null, // Null disables the button automatically
-
+                    // onPressed: () => {Get.toNamed(Routes.OTP)},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       disabledBackgroundColor:
